@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -44,15 +45,20 @@ public class GameMain : MonoBehaviour {
             switch (_currentStatus) {
                 case GAME_STATUS.STATUS_LOAD_GAME_CONFIG:
                     _processing = true;
-                    LoadMainXml();
+                    StartCoroutine(LoadMainXml());
+                    //LoadMainXml();
                     break;
                 case GAME_STATUS.STATUS_CHECK_VERSION:
+                    //TODO
                     break;
                 case GAME_STATUS.STATUS_UPDATE:
+                    //TODO
                     break;
                 case GAME_STATUS.STATUS_LOAD_DB:
+                    //TODO
                     break;
                 case GAME_STATUS.STATUS_LOAD_DLL:
+                    StartCoroutine(LoadHotFixAssembly());
                     break;
                 case GAME_STATUS.STATUS_FINISH:
                     break;
@@ -61,19 +67,18 @@ public class GameMain : MonoBehaviour {
         }
     }
 
-    private void LoadMainXml() {
+    private IEnumerator LoadMainXml() {
         string mainXml = "file:///" + Application.streamingAssetsPath + "/Main.xml";
         UnityWebRequest req = UnityWebRequest.Get(mainXml);
         req.timeout = 30;
         req.SendWebRequest();
         while (!req.isDone && !req.isHttpError && !req.isNetworkError) {
-            FileLog.Log(req.downloadProgress.ToString());
-            //  yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
         }
         if (req.isNetworkError) {
-            FileLog.LogError("网络异常");
+            FileLog.LogError("网络异常" + req.url);
         } else if (req.isHttpError) {
-            FileLog.LogError("请求异常");
+            FileLog.LogError("请求异常" + req.url);
         } else {
             FileLog.Log("Main.Xml加载完毕 \n" + req.downloadHandler.text);
             XmlDocument xml = new XmlDocument();
@@ -107,5 +112,63 @@ public class GameMain : MonoBehaviour {
                 }
             }
         }
+        req.Dispose();
+        yield return new WaitForEndOfFrame();
+    }
+
+
+    private IEnumerator LoadHotFixAssembly() {
+        byte[] dll = null;
+        byte[] pdb = null;
+        string path = string.Empty;
+#if UNITY_EDITOR
+        path = "file:///" + Application.streamingAssetsPath + "/ProjectLepus_HotFix.bin";
+#else
+        if (File.Exists(AppConst.LOCAL_DOWNLOAD_BIN_PATH + "/ProjectLepus_HotFix.bin"))
+            path = AppConst.LOCAL_DOWNLOAD_BIN_PATH + "/ProjectLepus_HotFix.bin";
+        else
+            path = Application.streamingAssetsPath + "/ProjectLepus_HotFix.bin";
+#endif
+        UnityWebRequest req = UnityWebRequest.Get(path);
+        req.timeout = 30;
+        req.SendWebRequest();
+        while (!req.isDone && !req.isHttpError && !req.isNetworkError) {
+            yield return new WaitForEndOfFrame();
+        }
+        if (req.isNetworkError) {
+            FileLog.LogError("网络异常" + req.url);
+        } else if (req.isHttpError) {
+            FileLog.LogError("请求异常" + req.url);
+        } else {
+            dll = req.downloadHandler.data;
+        }
+        req.Dispose();
+
+#if ILRuntime_DEBUG && UNITY_EDITOR
+        path = "file:///" + Application.streamingAssetsPath + "/ProjectLepus_HotFix.pdb";
+        req.timeout = 30;
+        req.SendWebRequest();
+        while (!req.isDone && !req.isHttpError && !req.isNetworkError) {
+            yield return new WaitForEndOfFrame();
+        }
+        if (req.isNetworkError) {
+            FileLog.LogError("网络异常" + req.url);
+        } else if (req.isHttpError) {
+            FileLog.LogError("请求异常" + req.url);
+        } else {
+            pdb = req.downloadHandler.data;
+        }
+        req.Dispose();
+#endif
+
+        ILRuntimeManager.Instance.Init(dll, pdb);
+
+        //变动大,可以在热更完毕后再使用的管理器放在热更项目中
+        //初始化热更项目内的主管理器
+        ILRuntimeManager.Instance.appDomain.Invoke(AppConst.HotFixPackageName + ".MainManager", "Setup", null, this);
+
+        FileLog.Log("DLL加载完毕");
+        _processing = false;
+        _currentStatus = GAME_STATUS.STATUS_LOAD_DB;
     }
 }
