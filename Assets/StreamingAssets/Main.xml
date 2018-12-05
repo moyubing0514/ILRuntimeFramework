@@ -1,0 +1,15 @@
+<Root>
+<Texts>
+<Text Key="App_Old_Version_Tips">游戏版本过低，进行更新</Text>
+<Text Key="Resource_Old_Version_Tips">资源版本过低，进行更新</Text>
+<Text Key="App_Downloading_Tips">正在下载新游戏包</Text>
+<Text Key="Resource_Downloading_Tips">正在下载资源包</Text>
+<Text Key="File_Reading_Precent">正在加载...{0}%</Text>
+<Text Key="Resource_Unzip_Tips">正在解压资源包</Text>
+<Text Key="App_Version_Text">游戏版本{0}.{1}</Text>
+</Texts>
+<Configs>
+<IsDebug>true</IsDebug>
+<FrameRate>30</FrameRate>
+</Configs>
+</Root>
