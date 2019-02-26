@@ -7,8 +7,8 @@
     <ProjectGuid>{EAA85913-17B7-43AD-9277-C307AF74EE24}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HotfixProject</RootNamespace>
-    <AssemblyName>HotfixProject</AssemblyName>
+    <RootNamespace>Hotfix</RootNamespace>
+    <AssemblyName>Hotfix</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -21,12 +21,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>1</WarningLevel>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="AfterBuild" command="copy ${ProjectDir}${OutDir}${ProjectName}.dll ${ProjectDir}\..\Assets\Resource\StreamingAssets\${ProjectName}.bin" workingdir="${ProjectDir}" />
-        <Command type="AfterBuild" command="copy ${ProjectDir}${OutDir}${ProjectName}.pdb ${ProjectDir}\..\Assets\Resource\StreamingAssets\${ProjectName}.pdb" workingdir="${ProjectDir}" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -71,4 +65,8 @@
     <Compile Include="Src\*.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(ProjectDir)\$(OutDir)\$(ProjectName).pdb" "$(ProjectDir)\..\Assets\StreamingAssets\$(ProjectName).pdb"
+copy "$(ProjectDir)\$(OutDir)\$(ProjectName).dll" "$(ProjectDir)\..\Assets\StreamingAssets\$(ProjectName).bin"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
