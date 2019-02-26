@@ -1,0 +1,11 @@
+Packages
+Library
+Logs
+/UnityProject/obj
+/UnityProject/Hotfix/obj
+/UnityProject/Hotfix/bin
+/UnityProject/Assembly-CSharp-Editor-firstpass.csproj
+/UnityProject/Assembly-CSharp-firstpass.csproj
+/UnityProject/ILRuntimeFramework.sln
+/UnityProject/Assembly-CSharp.csproj
+/UnityProject/.vs

@@ -1,0 +1,35 @@
+{
+	"version": "1.0.0.1",
+	"isDebug": true,
+	"frameRate": 30,
+	"host": "http://sinacloud.net/moyubing-mytest/",
+	"texts": [{
+			"id": 1,
+			"text": "正在检测版本"
+		},
+		{
+			"id": 2,
+			"text": "游戏版本过低，进行更新"
+		},
+		{
+			"id": 3,
+			"text": "资源版本过低，进行更新"
+		},
+		{
+			"id": 4,
+			"text": "正在下载资源包{0}%"
+		},
+		{
+			"id": 5,
+			"text": "正在解压资源包{0}%"
+		},
+		{
+			"id": 6,
+			"text": "正在进入游戏"
+		},
+		{
+			"id": 7,
+			"text": "游戏版本{0}"
+		}
+	]
+}
