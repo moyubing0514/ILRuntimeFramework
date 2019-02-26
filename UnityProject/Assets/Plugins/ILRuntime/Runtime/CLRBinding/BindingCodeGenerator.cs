@@ -50,7 +50,6 @@ using ILRuntime.Runtime.Intepreter;
 using ILRuntime.Runtime.Stack;
 using ILRuntime.Reflection;
 using ILRuntime.CLR.Utils;
-using System.Linq;
 
 namespace ILRuntime.Runtime.Generated
 {
@@ -574,7 +573,6 @@ using ILRuntime.Runtime.Intepreter;
 using ILRuntime.Runtime.Stack;
 using ILRuntime.Reflection;
 using ILRuntime.CLR.Utils;
-using System.Linq;
 
 namespace ILRuntime.Runtime.Generated
 {

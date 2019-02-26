@@ -26,17 +26,14 @@ public class ILRuntimeManager : SingletonInstance<ILRuntimeManager> {
         appDomain.DebugService.StartDebugService(56000);
         appDomain.UnityMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
 #endif
-        using (System.IO.MemoryStream fs = new MemoryStream(dllBytes))
-        {
-            if (pdbBytes == null)
-            {
-                appDomain.LoadAssembly(fs, null, new Mono.Cecil.Pdb.PdbReaderProvider());
-            }
-            else
-            {
-                using (System.IO.MemoryStream p = new MemoryStream(pdbBytes))
-                {
-                    appDomain.LoadAssembly(fs, p, new Mono.Cecil.Pdb.PdbReaderProvider());
+        using (System.IO.MemoryStream fs = new MemoryStream(dllBytes)) {
+            Mono.Cecil.Cil.ISymbolReaderProvider symbolReaderProvider = null;
+            if (pdbBytes == null) {
+                appDomain.LoadAssembly(fs, null, symbolReaderProvider);
+            } else {
+                using (System.IO.MemoryStream p = new MemoryStream(pdbBytes)) {
+                    symbolReaderProvider = new Mono.Cecil.Pdb.PdbReaderProvider();
+                    appDomain.LoadAssembly(fs, p, symbolReaderProvider);
                 }
             }
         }
