@@ -15,6 +15,8 @@ namespace HotFix
         {
             m_Instance = this;
             Debug.Log("HotFix Start Ok");
+            GameMain.DispatcherEvent(CommonEvents.UpdateCheckVersionProgress, 1f, GameMain.Instance.GetText(6));
+            GameMain.Instance.GetFSM().ChangeState(MainState_Running.Instance);
         }
 
         public override void Update()

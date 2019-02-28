@@ -31,7 +31,7 @@ public class MainState_LoadDll : MainState
     private void OnSuccess(byte[] pBytes) {
         byte[] pdb = null;
         if (AppConst.s_IsDebug) {
-            pdb = File.ReadAllBytes(AppConst.GetStreemingAssetURL("HotFix.pdb"));
+            pdb = File.ReadAllBytes("Assets/StreamingAssets/HotFix.pdb");
         }
         ILRuntimeManager.Instance.Init(pBytes, pdb);
 

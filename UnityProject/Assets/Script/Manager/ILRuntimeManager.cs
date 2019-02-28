@@ -26,23 +26,22 @@ public class ILRuntimeManager : SingletonInstance<ILRuntimeManager> {
         appDomain.DebugService.StartDebugService(56000);
         appDomain.UnityMainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
 #endif
-        using (System.IO.MemoryStream fs = new MemoryStream(dllBytes)) {
-            Mono.Cecil.Cil.ISymbolReaderProvider symbolReaderProvider = null;
-            if (pdbBytes == null) {
-                appDomain.LoadAssembly(fs, null, symbolReaderProvider);
-            } else {
-                using (System.IO.MemoryStream p = new MemoryStream(pdbBytes)) {
-                    symbolReaderProvider = new Mono.Cecil.Pdb.PdbReaderProvider();
-                    appDomain.LoadAssembly(fs, p, symbolReaderProvider);
-                }
-            }
-        }
+        System.IO.MemoryStream dllFs = new MemoryStream(dllBytes);
+        Mono.Cecil.Cil.ISymbolReaderProvider symbolReaderProvider = null;
+        if (pdbBytes == null) {
+            appDomain.LoadAssembly(dllFs, null, symbolReaderProvider);
+        } else {
+            System.IO.MemoryStream pdbFs = new MemoryStream(pdbBytes);
+            symbolReaderProvider = new Mono.Cecil.Pdb.PdbReaderProvider();
+            appDomain.LoadAssembly(dllFs, pdbFs, symbolReaderProvider);
 
+        }
         //这里做一些ILRuntime的注册
 
         //使用Couroutine时，C#编译器会自动生成一个实现了IEnumerator，IEnumerator<object>，IDisposable接口的类，因为这是跨域继承，所以需要写CrossBindAdapter（详细请看04_Inheritance教程），Demo已经直接写好，直接注册即可
         //协程注册
         appDomain.RegisterCrossBindingAdaptor(new CoroutineAdapter());
+        appDomain.RegisterCrossBindingAdaptor(new IGameHotFixInterfaceAdapter());
 
         //各种委托参数注册
         appDomain.DelegateManager.RegisterMethodDelegate<int>();

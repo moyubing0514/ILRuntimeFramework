@@ -17,7 +17,9 @@ public class MainState_Running : MainState {
 
     public override void Enter(GameMain pEntity) {
         base.Enter(pEntity);
+
         //加载游戏组件
+
     }
 
     public override void Execute(GameMain pEntity) {
