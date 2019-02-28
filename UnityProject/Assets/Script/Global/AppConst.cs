@@ -12,6 +12,8 @@ public class AppConst {
     public static string s_Host = "http://sinacloud.net/moyubing-mytest/";                          //远程地址
     public static string s_AppUrl;
     public static string s_ResUrl;
+    public static string s_AB_Suffix = ".rs";
+    public static bool s_IsUseAB = true;
 
     //***************
     //****本地路径***
@@ -20,6 +22,8 @@ public class AppConst {
     public static string LOCAL_DOWNLOAD_PATH = Application.persistentDataPath + "/Download";          //下载文件总目录
 
     private static string _LOCAL_DOWNLOAD_TEMP_PATH = string.Empty;                                   //下载时临时文件目录
+
+
     public static string GetTmpPath(string pFilename) {
         if (string.IsNullOrEmpty(_LOCAL_DOWNLOAD_TEMP_PATH)) {
 #if UNITY_EDITOR
